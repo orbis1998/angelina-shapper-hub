@@ -10,6 +10,15 @@ export function formatCurrency(amount: number | string | null | undefined): stri
   }).format(n);
 }
 
+export function formatCDF(amount: number | string | null | undefined): string {
+  const n = typeof amount === "string" ? parseFloat(amount) : (amount ?? 0);
+  return new Intl.NumberFormat("fr-FR", {
+    style: "decimal",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(n) + " CDF";
+}
+
 export function formatDate(date: string | Date): string {
   const d = typeof date === "string" ? new Date(date) : date;
   return new Intl.DateTimeFormat("fr-FR", {

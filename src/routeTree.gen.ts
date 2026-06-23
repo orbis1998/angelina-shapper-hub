@@ -12,8 +12,18 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SuiviCodeRouteImport } from './routes/suivi.$code'
 import { Route as AuthenticatedLivreurRouteImport } from './routes/_authenticated/livreur'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedAdminProduitsRouteImport } from './routes/_authenticated/admin/produits'
+import { Route as AuthenticatedAdminPosRouteImport } from './routes/_authenticated/admin/pos'
+import { Route as AuthenticatedAdminLivreursRouteImport } from './routes/_authenticated/admin/livreurs'
+import { Route as AuthenticatedAdminDepensesRouteImport } from './routes/_authenticated/admin/depenses'
+import { Route as AuthenticatedAdminComptabiliteRouteImport } from './routes/_authenticated/admin/comptabilite'
+import { Route as AuthenticatedAdminCommandesRouteImport } from './routes/_authenticated/admin/commandes'
+import { Route as AuthenticatedAdminBeneficeRouteImport } from './routes/_authenticated/admin/benefice'
+import { Route as AuthenticatedAdminAllocationsRouteImport } from './routes/_authenticated/admin/allocations'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -29,6 +39,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuiviCodeRoute = SuiviCodeRouteImport.update({
+  id: '/suivi/$code',
+  path: '/suivi/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedLivreurRoute = AuthenticatedLivreurRouteImport.update({
   id: '/livreur',
   path: '/livreur',
@@ -39,32 +54,140 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminProduitsRoute =
+  AuthenticatedAdminProduitsRouteImport.update({
+    id: '/produits',
+    path: '/produits',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPosRoute = AuthenticatedAdminPosRouteImport.update({
+  id: '/pos',
+  path: '/pos',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminLivreursRoute =
+  AuthenticatedAdminLivreursRouteImport.update({
+    id: '/livreurs',
+    path: '/livreurs',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminDepensesRoute =
+  AuthenticatedAdminDepensesRouteImport.update({
+    id: '/depenses',
+    path: '/depenses',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminComptabiliteRoute =
+  AuthenticatedAdminComptabiliteRouteImport.update({
+    id: '/comptabilite',
+    path: '/comptabilite',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCommandesRoute =
+  AuthenticatedAdminCommandesRouteImport.update({
+    id: '/commandes',
+    path: '/commandes',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminBeneficeRoute =
+  AuthenticatedAdminBeneficeRouteImport.update({
+    id: '/benefice',
+    path: '/benefice',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminAllocationsRoute =
+  AuthenticatedAdminAllocationsRouteImport.update({
+    id: '/allocations',
+    path: '/allocations',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/livreur': typeof AuthenticatedLivreurRoute
+  '/suivi/$code': typeof SuiviCodeRoute
+  '/admin/allocations': typeof AuthenticatedAdminAllocationsRoute
+  '/admin/benefice': typeof AuthenticatedAdminBeneficeRoute
+  '/admin/commandes': typeof AuthenticatedAdminCommandesRoute
+  '/admin/comptabilite': typeof AuthenticatedAdminComptabiliteRoute
+  '/admin/depenses': typeof AuthenticatedAdminDepensesRoute
+  '/admin/livreurs': typeof AuthenticatedAdminLivreursRoute
+  '/admin/pos': typeof AuthenticatedAdminPosRoute
+  '/admin/produits': typeof AuthenticatedAdminProduitsRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/livreur': typeof AuthenticatedLivreurRoute
+  '/suivi/$code': typeof SuiviCodeRoute
+  '/admin/allocations': typeof AuthenticatedAdminAllocationsRoute
+  '/admin/benefice': typeof AuthenticatedAdminBeneficeRoute
+  '/admin/commandes': typeof AuthenticatedAdminCommandesRoute
+  '/admin/comptabilite': typeof AuthenticatedAdminComptabiliteRoute
+  '/admin/depenses': typeof AuthenticatedAdminDepensesRoute
+  '/admin/livreurs': typeof AuthenticatedAdminLivreursRoute
+  '/admin/pos': typeof AuthenticatedAdminPosRoute
+  '/admin/produits': typeof AuthenticatedAdminProduitsRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/livreur': typeof AuthenticatedLivreurRoute
+  '/suivi/$code': typeof SuiviCodeRoute
+  '/_authenticated/admin/allocations': typeof AuthenticatedAdminAllocationsRoute
+  '/_authenticated/admin/benefice': typeof AuthenticatedAdminBeneficeRoute
+  '/_authenticated/admin/commandes': typeof AuthenticatedAdminCommandesRoute
+  '/_authenticated/admin/comptabilite': typeof AuthenticatedAdminComptabiliteRoute
+  '/_authenticated/admin/depenses': typeof AuthenticatedAdminDepensesRoute
+  '/_authenticated/admin/livreurs': typeof AuthenticatedAdminLivreursRoute
+  '/_authenticated/admin/pos': typeof AuthenticatedAdminPosRoute
+  '/_authenticated/admin/produits': typeof AuthenticatedAdminProduitsRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/admin' | '/livreur'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/admin'
+    | '/livreur'
+    | '/suivi/$code'
+    | '/admin/allocations'
+    | '/admin/benefice'
+    | '/admin/commandes'
+    | '/admin/comptabilite'
+    | '/admin/depenses'
+    | '/admin/livreurs'
+    | '/admin/pos'
+    | '/admin/produits'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/admin' | '/livreur'
+  to:
+    | '/'
+    | '/login'
+    | '/livreur'
+    | '/suivi/$code'
+    | '/admin/allocations'
+    | '/admin/benefice'
+    | '/admin/commandes'
+    | '/admin/comptabilite'
+    | '/admin/depenses'
+    | '/admin/livreurs'
+    | '/admin/pos'
+    | '/admin/produits'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -72,12 +195,23 @@ export interface FileRouteTypes {
     | '/login'
     | '/_authenticated/admin'
     | '/_authenticated/livreur'
+    | '/suivi/$code'
+    | '/_authenticated/admin/allocations'
+    | '/_authenticated/admin/benefice'
+    | '/_authenticated/admin/commandes'
+    | '/_authenticated/admin/comptabilite'
+    | '/_authenticated/admin/depenses'
+    | '/_authenticated/admin/livreurs'
+    | '/_authenticated/admin/pos'
+    | '/_authenticated/admin/produits'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
+  SuiviCodeRoute: typeof SuiviCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -103,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/suivi/$code': {
+      id: '/suivi/$code'
+      path: '/suivi/$code'
+      fullPath: '/suivi/$code'
+      preLoaderRoute: typeof SuiviCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/livreur': {
       id: '/_authenticated/livreur'
       path: '/livreur'
@@ -117,16 +258,106 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/produits': {
+      id: '/_authenticated/admin/produits'
+      path: '/produits'
+      fullPath: '/admin/produits'
+      preLoaderRoute: typeof AuthenticatedAdminProduitsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/pos': {
+      id: '/_authenticated/admin/pos'
+      path: '/pos'
+      fullPath: '/admin/pos'
+      preLoaderRoute: typeof AuthenticatedAdminPosRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/livreurs': {
+      id: '/_authenticated/admin/livreurs'
+      path: '/livreurs'
+      fullPath: '/admin/livreurs'
+      preLoaderRoute: typeof AuthenticatedAdminLivreursRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/depenses': {
+      id: '/_authenticated/admin/depenses'
+      path: '/depenses'
+      fullPath: '/admin/depenses'
+      preLoaderRoute: typeof AuthenticatedAdminDepensesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/comptabilite': {
+      id: '/_authenticated/admin/comptabilite'
+      path: '/comptabilite'
+      fullPath: '/admin/comptabilite'
+      preLoaderRoute: typeof AuthenticatedAdminComptabiliteRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/commandes': {
+      id: '/_authenticated/admin/commandes'
+      path: '/commandes'
+      fullPath: '/admin/commandes'
+      preLoaderRoute: typeof AuthenticatedAdminCommandesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/benefice': {
+      id: '/_authenticated/admin/benefice'
+      path: '/benefice'
+      fullPath: '/admin/benefice'
+      preLoaderRoute: typeof AuthenticatedAdminBeneficeRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/allocations': {
+      id: '/_authenticated/admin/allocations'
+      path: '/allocations'
+      fullPath: '/admin/allocations'
+      preLoaderRoute: typeof AuthenticatedAdminAllocationsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAllocationsRoute: typeof AuthenticatedAdminAllocationsRoute
+  AuthenticatedAdminBeneficeRoute: typeof AuthenticatedAdminBeneficeRoute
+  AuthenticatedAdminCommandesRoute: typeof AuthenticatedAdminCommandesRoute
+  AuthenticatedAdminComptabiliteRoute: typeof AuthenticatedAdminComptabiliteRoute
+  AuthenticatedAdminDepensesRoute: typeof AuthenticatedAdminDepensesRoute
+  AuthenticatedAdminLivreursRoute: typeof AuthenticatedAdminLivreursRoute
+  AuthenticatedAdminPosRoute: typeof AuthenticatedAdminPosRoute
+  AuthenticatedAdminProduitsRoute: typeof AuthenticatedAdminProduitsRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAllocationsRoute: AuthenticatedAdminAllocationsRoute,
+  AuthenticatedAdminBeneficeRoute: AuthenticatedAdminBeneficeRoute,
+  AuthenticatedAdminCommandesRoute: AuthenticatedAdminCommandesRoute,
+  AuthenticatedAdminComptabiliteRoute: AuthenticatedAdminComptabiliteRoute,
+  AuthenticatedAdminDepensesRoute: AuthenticatedAdminDepensesRoute,
+  AuthenticatedAdminLivreursRoute: AuthenticatedAdminLivreursRoute,
+  AuthenticatedAdminPosRoute: AuthenticatedAdminPosRoute,
+  AuthenticatedAdminProduitsRoute: AuthenticatedAdminProduitsRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedLivreurRoute: typeof AuthenticatedLivreurRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedLivreurRoute: AuthenticatedLivreurRoute,
 }
 
@@ -138,7 +369,18 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
+  SuiviCodeRoute: SuiviCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -13,7 +13,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Plus, Minus, Trash2, History, Receipt } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, History, Receipt, ClipboardList } from "lucide-react";
+import { LivreurOrdersSection } from "@/components/livreur/orders-section";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { generateReceipt } from "@/lib/exports";
 import { toast } from "sonner";
@@ -31,11 +32,13 @@ function LivreurPage() {
 
   return (
     <AppShell items={[{ to: "/livreur", label: "POS", icon: <ShoppingCart className="size-4" /> }]} subtitle="Espace livreur">
-      <Tabs defaultValue="pos">
-        <TabsList className="grid grid-cols-2 w-full mb-6">
+      <Tabs defaultValue="orders">
+        <TabsList className="grid grid-cols-3 w-full mb-6">
+          <TabsTrigger value="orders"><ClipboardList className="size-4 mr-1.5" />Commandes</TabsTrigger>
           <TabsTrigger value="pos"><ShoppingCart className="size-4 mr-1.5" />Nouvelle livraison</TabsTrigger>
           <TabsTrigger value="history"><History className="size-4 mr-1.5" />Historique</TabsTrigger>
         </TabsList>
+        <TabsContent value="orders"><LivreurOrdersSection userId={user.id} /></TabsContent>
         <TabsContent value="pos"><PosSection userId={user.id} /></TabsContent>
         <TabsContent value="history"><HistorySection userId={user.id} /></TabsContent>
       </Tabs>
@@ -192,7 +195,7 @@ function PosSection({ userId }: { userId: string }) {
           </div>
           <div><Label className="text-xs">Notes</Label><Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} maxLength={500} /></div>
           <div className="flex justify-between font-display text-xl pt-2 border-t"><span>TOTAL</span><span className="text-primary">{formatCurrency(total)}</span></div>
-          <Button className="w-full h-12 text-base bg-gradient-primary shadow-elegant" onClick={submit} disabled={busy || cart.length === 0}>
+          <Button className="w-full h-12 text-base" onClick={submit} disabled={busy || cart.length === 0}>
             <Receipt className="size-5 mr-2" />Valider la livraison
           </Button>
         </CardContent></Card>

@@ -98,3 +98,34 @@ export const bootstrapAdmin = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/** Créer un compte admin direct (pour l'initialisation). */
+export const createAdminUser = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) =>
+    z.object({ email: z.string().email(), password: z.string().min(6).max(72), full_name: z.string().min(2) }).parse(d),
+  )
+  .handler(async ({ data }) => {
+    const { count } = await supabaseAdmin
+      .from("user_roles")
+      .select("*", { count: "exact", head: true })
+      .eq("role", "admin");
+    if ((count ?? 0) > 0) {
+      throw new Error("Un admin existe déjà");
+    }
+
+    const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
+      email: data.email,
+      password: data.password,
+      email_confirm: true,
+      user_metadata: { full_name: data.full_name },
+    });
+    if (error) throw new Error(error.message);
+    const newUid = created.user!.id;
+
+    const { error: roleErr } = await supabaseAdmin
+      .from("user_roles")
+      .insert({ user_id: newUid, role: "admin" });
+    if (roleErr) throw new Error(roleErr.message);
+
+    return { id: newUid, email: data.email };
+  });

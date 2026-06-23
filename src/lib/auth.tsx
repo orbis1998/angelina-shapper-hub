@@ -25,13 +25,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   async function loadProfile(uid: string) {
-    const [{ data: roleRow }, { data: profile }] = await Promise.all([
-      supabase.from("user_roles").select("role").eq("user_id", uid).maybeSingle(),
-      supabase.from("profiles").select("full_name, badge_number").eq("id", uid).maybeSingle(),
-    ]);
-    setRole((roleRow?.role as AppRole) ?? null);
-    setFullName(profile?.full_name ?? null);
-    setBadgeNumber(profile?.badge_number ?? null);
+    try {
+      const [roleRes, profileRes] = await Promise.all([
+        supabase.from("user_roles").select("role").eq("user_id", uid).maybeSingle(),
+        supabase.from("profiles").select("full_name, badge_number").eq("id", uid).maybeSingle(),
+      ]);
+
+      if (roleRes.error) console.error("Error loading role:", roleRes.error);
+      if (profileRes.error) console.error("Error loading profile:", profileRes.error);
+
+      setRole((roleRes.data?.role as AppRole) ?? null);
+      setFullName(profileRes.data?.full_name ?? null);
+      setBadgeNumber(profileRes.data?.badge_number ?? null);
+    } catch (err) {
+      console.error("Error in loadProfile:", err);
+    }
   }
 
   useEffect(() => {
@@ -60,7 +68,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const refresh = async () => {
-    if (session?.user) await loadProfile(session.user.id);
+    const { data } = await supabase.auth.getSession();
+    if (data.session?.user) await loadProfile(data.session.user.id);
   };
 
   const signOut = async () => {
