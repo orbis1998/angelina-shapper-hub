@@ -1,34 +1,35 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAdvancedAccounting } from "@/components/admin/expenses-section";
 import { PageHeader, StatCard } from "@/components/admin/shared";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { formatCurrency, formatMonth, monthRange } from "@/lib/format";
+import { formatCurrency, formatMonth } from "@/lib/format";
 
 export function DashboardSection() {
   const month = new Date().toISOString().slice(0, 7);
-  const { start, end } = monthRange(month);
+  const { data: advanced } = useAdvancedAccounting(month);
   const { data } = useQuery({
     queryKey: ["admin-dashboard", month],
     queryFn: async () => {
-      const [deliveries, products, livreurs, orders] = await Promise.all([
-        supabase.from("deliveries").select("total_amount, discount_amount").gte("delivered_at", start).lt("delivered_at", end),
+      const [products, livreurs, orders] = await Promise.all([
         supabase.from("products").select("id, name, stock_global, price, cost_price").eq("active", true),
         supabase.from("profiles").select("id").not("badge_number", "is", null),
-        supabase.from("orders").select("id").eq("status", "assigned"),
+        supabase.from("orders").select("id").in("status", ["assigned", "en_route"]),
       ]);
       return {
-        deliveries: deliveries.data ?? [],
         products: products.data ?? [],
         livreurs: livreurs.data ?? [],
         pendingOrders: orders.data?.length ?? 0,
       };
     },
   });
-  const d = data ?? { deliveries: [], products: [], livreurs: [], pendingOrders: 0 };
-  const ca = d.deliveries.reduce((s, x) => s + Number(x.total_amount), 0);
-  const reductions = d.deliveries.reduce((s, x) => s + Number(x.discount_amount), 0);
+  const d = data ?? { products: [], livreurs: [], pendingOrders: 0 };
+  const ca = advanced?.caProducts ?? 0;
+  const caDeliveries = advanced?.caDeliveries ?? 0;
+  const caPos = advanced?.caPos ?? 0;
+  const caShipments = advanced?.caShipments ?? 0;
   const stockQty = d.products.reduce((s, p) => s + p.stock_global, 0);
   const stockValue = d.products.reduce((s, p) => s + p.stock_global * Number(p.price), 0);
 
@@ -36,12 +37,15 @@ export function DashboardSection() {
     <div className="space-y-8">
       <PageHeader title={`Tableau de bord — ${formatMonth(month + "-01")}`} description="Vue d'ensemble de l'activité du mois." />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Chiffre d'affaires" value={formatCurrency(ca)} highlight />
-        <StatCard label="Livraisons" value={String(d.deliveries.length)} />
-        <StatCard label="Réductions" value={formatCurrency(reductions)} />
+        <StatCard label="Chiffre d'affaires" value={formatCurrency(ca)} highlight sub="Livraisons + POS + expéditions" />
+        <StatCard label="CA livraisons" value={formatCurrency(caDeliveries)} />
+        <StatCard label="CA POS magasin" value={formatCurrency(caPos)} />
         <StatCard label="Commandes en cours" value={String(d.pendingOrders)} />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard label="CA expéditions" value={formatCurrency(caShipments)} />
+        <StatCard label="Dépenses du mois" value={formatCurrency(advanced?.totalExpenses ?? 0)} />
+        <StatCard label="Résultat net" value={formatCurrency(advanced?.netResult ?? ca)} sub="CA − dépenses" />
         <StatCard label="Stock global (unités)" value={String(stockQty)} sub="Entrepôt principal" />
         <StatCard label="Valeur stock" value={formatCurrency(stockValue)} sub="Prix de vente" />
         <StatCard label="Livreurs actifs" value={String(d.livreurs.length)} />

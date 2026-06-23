@@ -40,10 +40,10 @@ async function getProductMap(ids: string[]) {
 }
 
 function calcTotals(
-  items: { quantity: number; unit_price: number }[],
+  items: { quantity: number; unit_price_usd: number; line_total_usd: number }[],
   discount: number,
 ) {
-  const subtotal = items.reduce((s, i) => s + i.quantity * i.unit_price, 0);
+  const subtotal = items.reduce((s, i) => s + i.line_total_usd, 0);
   const disc = Math.min(subtotal, Math.max(0, discount));
   return { subtotal_usd: subtotal, total_products_usd: subtotal - disc, discount_amount_usd: disc };
 }
